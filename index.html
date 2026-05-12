@@ -19,72 +19,39 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Sans',sans-serif; background:var(--off-white); color:#1a1a1a; }
   
-  nav {
-    background:#143c14; color:white; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100;
-    box-shadow:0 4px 12px rgba(0,0,0,0.2);
-  }
+  nav { background:#143c14; color:white; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,0.2); }
   .logo { font-family:'DM Serif Display',serif; font-size:1.8rem; color:var(--yellow); }
 
-  .hero {
-    background: linear-gradient(rgba(26,92,26,0.85), rgba(26,92,26,0.9)), url('https://source.unsplash.com/random/1920x1080/?zambia,agriculture') center/cover;
-    color:white; padding:90px 20px; text-align:center;
-  }
+  .hero { background: linear-gradient(rgba(26,92,26,0.85), rgba(26,92,26,0.9)), url('https://source.unsplash.com/random/1920x1080/?zambia,agriculture') center/cover; color:white; padding:90px 20px; text-align:center; }
   .hero h1 { font-family:'DM Serif Display',serif; font-size:3rem; margin-bottom:12px; }
   .hero h1 span { color:var(--yellow); }
 
   .container { max-width:1200px; margin:30px auto; padding:0 20px; }
-
-  .cards-grid {
-    display:grid; grid-template-columns:repeat(auto-fit, minmax(480px,1fr)); gap:25px; margin-bottom:30px;
-  }
-  .card {
-    background:white; border-radius:12px; padding:25px; box-shadow:0 4px 20px rgba(26,92,26,0.12);
-    border:2px solid var(--yellow);
-  }
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(480px,1fr)); gap:25px; margin-bottom:30px; }
+  .card { background:white; border-radius:12px; padding:25px; box-shadow:0 4px 20px rgba(26,92,26,0.12); border:2px solid var(--yellow); }
   .card h3 { color:var(--green-dark); margin-bottom:18px; font-size:1.4rem; }
 
-  .input-group {
-    display:flex; align-items:center; margin-bottom:14px; gap:12px;
-  }
-  .input-group label {
-    width:190px; font-weight:500; color:#333;
-  }
-  .input-group input {
+  .input-group { display:flex; align-items:center; margin-bottom:14px; gap:12px; }
+  .input-group label { width:190px; font-weight:500; color:#333; }
+  .input-group input, .input-group select {
     flex:1; padding:12px; border:2px solid #d4e0d4; border-radius:8px; background:var(--yellow-light); font-size:1rem;
   }
 
-  .btn {
-    padding:14px 32px; font-weight:600; border:none; border-radius:8px; cursor:pointer; font-size:1.1rem;
-  }
+  .btn { padding:14px 32px; font-weight:600; border:none; border-radius:8px; cursor:pointer; font-size:1.1rem; }
   .btn-run { background:var(--green-dark); color:var(--yellow); }
   .btn-clear { background:white; border:2px solid var(--green-dark); color:var(--green-dark); }
 
   #results { display:none; }
-  .result-card {
-    background:white; padding:25px; border-radius:12px; box-shadow:0 4px 20px rgba(26,92,26,0.1);
-    border-top:6px solid var(--yellow);
-  }
+  .result-card { background:white; padding:25px; border-radius:12px; box-shadow:0 4px 20px rgba(26,92,26,0.1); border-top:6px solid var(--yellow); }
   .tomato-card { border-top-color:var(--green-light); }
-
-  .total-bar {
-    background:var(--green-dark); color:white; padding:25px 30px; border-radius:12px; margin:25px 0;
-    display:flex; justify-content:space-between; align-items:center; font-size:1.5rem;
-  }
+  .total-bar { background:var(--green-dark); color:white; padding:25px 30px; border-radius:12px; margin:25px 0; display:flex; justify-content:space-between; align-items:center; font-size:1.5rem; }
   .total-bar .val { color:var(--yellow); font-size:2.2rem; font-weight:bold; }
-
-  .history { margin-top:40px; }
-  .history-item {
-    background:white; padding:15px; border-radius:8px; margin-bottom:10px; border-left:5px solid var(--yellow);
-  }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="logo">AgriTwin-ZM</div>
-  <div>
-    <button class="btn btn-run" onclick="runSimulation()">Run Simulation</button>
-  </div>
 </nav>
 
 <div class="hero">
@@ -93,10 +60,10 @@
 </div>
 
 <div class="container">
-  <!-- Input Section -->
   <h2 style="text-align:center; color:var(--green-dark); margin:30px 0 25px; font-size:2rem;">Agricultural Data Input</h2>
 
   <div class="cards-grid">
+    <!-- Maize Card -->
     <div class="card">
       <h3>🌽 Maize Data</h3>
       <div class="input-group"><label>Production (tons)</label><input type="number" id="mProd" value="5200" oninput="liveUpdate()"></div>
@@ -106,15 +73,30 @@
       <div class="input-group"><label>Loss (%)</label><input type="number" id="mLoss" value="8" oninput="liveUpdate()"></div>
     </div>
 
+    <!-- Tomato Card -->
     <div class="card">
       <h3>🍅 Tomato Data</h3>
       <div class="input-group"><label>Production (tons)</label><input type="number" id="tProd" value="1800" oninput="liveUpdate()"></div>
       <div class="input-group"><label>Storage (tons)</label><input type="number" id="tStore" value="1200" oninput="liveUpdate()"></div>
       <div class="input-group"><label>Spoilage (%)</label><input type="number" id="tSpoil" value="18" oninput="liveUpdate()"></div>
       <div class="input-group"><label>Price/Ton (ZMW)</label><input type="number" id="tPrice" value="8500" oninput="liveUpdate()"></div>
+      
+      <!-- New Temperature Fields -->
+      <div class="input-group">
+        <label>Temperature Type</label>
+        <select id="tempType" onchange="liveUpdate()">
+          <option value="Open">Open</option>
+          <option value="Cold">Cold Storage</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Temperature (°C)</label>
+        <input type="number" id="tTemp" value="24" step="0.1" oninput="liveUpdate()">
+      </div>
     </div>
   </div>
 
+  <!-- Market Demand -->
   <div class="card" style="max-width:900px; margin:0 auto 30px;">
     <h3>Market Demand</h3>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
@@ -128,10 +110,7 @@
     <button class="btn btn-run" onclick="runSimulation()" style="margin-left:15px;">▶ Run Full Simulation</button>
   </div>
 
-  <!-- Live Chart -->
-  <div style="margin:40px 0;">
-    <canvas id="supplyChart" height="120"></canvas>
-  </div>
+  <canvas id="supplyChart" height="110"></canvas>
 
   <!-- Results -->
   <div id="results">
@@ -141,15 +120,15 @@
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(420px,1fr)); gap:25px;">
       <div class="result-card">
         <h3>🌽 Maize</h3>
-        <p>Available: <span id="rMaizeVal" class="result-val">--</span> tons</p>
-        <p id="rMaizeStat"></p>
-        <p>Revenue: <strong id="rMaizeRev">--</strong></p>
+        <p>Available: <span id="rMaizeVal" style="font-size:2.4rem; font-weight:bold; color:var(--green-dark);"></span> tons</p>
+        <p id="rMaizeStat" style="margin:10px 0;"></p>
+        <p>Revenue: <strong id="rMaizeRev"></strong></p>
       </div>
       <div class="result-card tomato-card">
         <h3>🍅 Tomato</h3>
-        <p>Available: <span id="rTomVal" class="result-val">--</span> tons</p>
-        <p id="rTomStat"></p>
-        <p>Revenue: <strong id="rTomRev">--</strong></p>
+        <p>Available: <span id="rTomVal" style="font-size:2.4rem; font-weight:bold; color:var(--green-dark);"></span> tons</p>
+        <p id="rTomStat" style="margin:10px 0;"></p>
+        <p>Revenue: <strong id="rTomRev"></strong></p>
       </div>
     </div>
 
@@ -158,47 +137,51 @@
       <span class="val" id="rTotal">ZMW 0</span>
     </div>
   </div>
-
-  <!-- History -->
-  <div class="history">
-    <h3 style="color:var(--green-dark); margin:30px 0 15px;">Simulation History</h3>
-    <div id="historyList"></div>
-  </div>
 </div>
 
 <script>
-// Chart
+// Chart.js
 let supplyChart;
 function initChart() {
   supplyChart = new Chart(document.getElementById('supplyChart'), {
     type: 'bar',
-    data: { labels: ['Maize Production', 'Maize Demand', 'Tomato Production', 'Tomato Demand'],
-            datasets: [{ label: 'Tons', data: [0,0,0,0], backgroundColor: ['#2e7d32', '#f57c00', '#4caf50', '#ff9800'] }] },
-    options: { responsive: true, plugins: { legend: { display: false } } }
+    data: {
+      labels: ['Maize Prod', 'Maize Demand', 'Tomato Prod', 'Tomato Demand'],
+      datasets: [{ label: 'Tons', data: [0,0,0,0], backgroundColor: ['#2e7d32', '#f57c00', '#4caf50', '#ff9800'] }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false }}}
   });
 }
 
-// Real-time Update
+// Live Update + Temperature Validation
 function liveUpdate() {
-  const mProd = +document.getElementById('mProd').value || 0;
-  const mStore = +document.getElementById('mStore').value || 0;
-  const mMoist = +document.getElementById('mMoist').value || 0;
-  const mLoss = +document.getElementById('mLoss').value || 0;
-  const tProd = +document.getElementById('tProd').value || 0;
-  const tStore = +document.getElementById('tStore').value || 0;
-  const tSpoil = +document.getElementById('tSpoil').value || 0;
+  const tempType = document.getElementById('tempType').value;
+  const temp = parseFloat(document.getElementById('tTemp').value) || 0;
 
-  let mAvail = Math.min(mProd * (1 - mLoss/100) * (mMoist > 14 ? 0.95 : 1), mStore);
-  let tAvail = Math.min(tProd * (1 - tSpoil/100), tStore);
+  // Temperature Validation (same as your Java code)
+  if (tempType === "Cold" && (temp < 13 || temp > 15)) {
+    document.getElementById('tTemp').style.borderColor = "red";
+  } else if (tempType === "Open" && (temp < 20 || temp > 29)) {
+    document.getElementById('tTemp').style.borderColor = "red";
+  } else {
+    document.getElementById('tTemp').style.borderColor = "#4caf50";
+  }
 
-  supplyChart.data.datasets[0].data = [mProd, +document.getElementById('mDem').value||0, tProd, +document.getElementById('tDem').value||0];
+  // Update Chart
+  supplyChart.data.datasets[0].data = [
+    +document.getElementById('mProd').value || 0,
+    +document.getElementById('mDem').value || 0,
+    +document.getElementById('tProd').value || 0,
+    +document.getElementById('tDem').value || 0
+  ];
   supplyChart.update();
 }
 
-// Run Full Simulation
+// Run Simulation
 function runSimulation() {
   liveUpdate();
 
+  // Get all values
   const mProd = +document.getElementById('mProd').value || 0;
   const mStore = +document.getElementById('mStore').value || 0;
   const mMoist = +document.getElementById('mMoist').value || 0;
@@ -212,15 +195,17 @@ function runSimulation() {
   const tPrice = +document.getElementById('tPrice').value || 0;
   const tDem = +document.getElementById('tDem').value || 0;
 
+  // Calculations
   let mAvail = Math.min(mProd * (1 - mLoss/100) * (mMoist > 14 ? 0.95 : 1), mStore);
   let tAvail = Math.min(tProd * (1 - tSpoil/100), tStore);
 
   let mRev = mAvail * mPrice;
   let tRev = tAvail * tPrice;
 
-  const mStat = mAvail > mDem * 1.05 ? "SURPLUS" : (mAvail < mDem * 0.95 ? "DEFICIT" : "BALANCED");
-  const tStat = tAvail > tDem * 1.05 ? "SURPLUS" : (tAvail < tDem * 0.95 ? "DEFICIT" : "BALANCED");
+  const mStat = mAvail > mDem * 1.05 ? "SURPLUS" : mAvail < mDem * 0.95 ? "DEFICIT" : "BALANCED";
+  const tStat = tAvail > tDem * 1.05 ? "SURPLUS" : tAvail < tDem * 0.95 ? "DEFICIT" : "BALANCED";
 
+  // Display Results
   document.getElementById('rMaizeVal').textContent = mAvail.toFixed(1);
   document.getElementById('rTomVal').textContent = tAvail.toFixed(1);
   document.getElementById('rMaizeRev').textContent = `ZMW ${mRev.toLocaleString()}`;
@@ -231,45 +216,18 @@ function runSimulation() {
 
   document.getElementById('dateLine').textContent = `Report generated: ${new Date().toLocaleString('en-ZM')}`;
   document.getElementById('results').style.display = 'block';
-
-  saveToHistory(mAvail, tAvail, mRev + tRev);
-}
-
-// History
-function saveToHistory(mAvail, tAvail, totalRev) {
-  let history = JSON.parse(localStorage.getItem('agriHistory') || '[]');
-  history.unshift({
-    date: new Date().toLocaleString('en-ZM'),
-    maize: mAvail.toFixed(1),
-    tomato: tAvail.toFixed(1),
-    revenue: totalRev.toLocaleString()
-  });
-  if (history.length > 10) history.pop();
-  localStorage.setItem('agriHistory', JSON.stringify(history));
-  loadHistory();
-}
-
-function loadHistory() {
-  const history = JSON.parse(localStorage.getItem('agriHistory') || '[]');
-  const container = document.getElementById('historyList');
-  container.innerHTML = history.map(item => `
-    <div class="history-item">
-      <strong>${item.date}</strong><br>
-      Maize: ${item.maize} tons | Tomato: ${item.tomato} tons | Revenue: ZMW ${item.revenue}
-    </div>
-  `).join('');
 }
 
 function clearFields() {
   document.querySelectorAll('input').forEach(i => i.value = '');
   document.getElementById('results').style.display = 'none';
+  document.getElementById('tTemp').style.borderColor = "#d4e0d4";
 }
 
 // Initialize
 window.onload = () => {
   initChart();
   liveUpdate();
-  loadHistory();
 };
 </script>
 </body>
