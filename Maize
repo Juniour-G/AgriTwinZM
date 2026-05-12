@@ -1,0 +1,35 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+
+/**
+ *
+ * @author Guess Who
+ */
+public class Maize {
+      double prod, store, moist, price, loss;
+      
+      public Maize(double p, double s, double m, double pr, double l){
+          this.prod = p;
+          this.store =s;
+          this.moist = m;
+          this.price = pr;
+          this.loss = l;
+      }
+      public double availableMaize(){
+          double effectiveProduction = prod;
+          
+          // if moisture is above 14%, reduce the usable production by a penalty(5%)
+          if(moist > 14) {
+              effectiveProduction = prod * 0.95;
+          }
+          //Aplyy existing loss and storage constraint
+          return Math.min(effectiveProduction * (1 - (loss/100)), store);
+      }
+      public double calculateRevenue(){
+          return availableMaize() * price;
+      }
+}
+
