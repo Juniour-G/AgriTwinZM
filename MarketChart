@@ -1,0 +1,55 @@
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MarketChart extends JPanel {
+    private double maizeSupply, maizeDemand, tomSupply, tomDemand;
+
+    // Method to update the data from the GUI
+    public void setChartData(double ms, double md, double ts, double td) {
+        this.maizeSupply = ms;
+        this.maizeDemand = md;
+        this.tomSupply = ts;
+        this.tomDemand = td;
+        repaint(); // Tells Java to redraw the chart with new numbers
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int width = getWidth();
+        int height = getHeight() - 100; // Leave space for labels
+        
+        // Find the highest value to scale the bars correctly
+        double max = Math.max(Math.max(maizeSupply, maizeDemand), Math.max(tomSupply, tomDemand));
+        if (max == 0) max = 1;
+
+        // Define colors (Matching your AgriTwin theme)
+        Color maizeColor = new Color(255, 193, 7);   // YELLOW
+        Color maizeDim   = new Color(180, 140, 0);   // Darker Yellow
+        Color tomColor   = new Color(76, 175, 80);   // GREEN_LIGHT
+        Color tomDim     = new Color(26, 92, 26);    // GREEN_DARK
+
+        // Draw Bars (x, base, height, color, label)
+        drawBar(g2, 60,  height, (int)((maizeSupply/max)*height), maizeColor, "Maize Supply");
+        drawBar(g2, 120, height, (int)((maizeDemand/max)*height), maizeDim,   "Maize Demand");
+        drawBar(g2, 240, height, (int)((tomSupply/max)*height),   tomColor,   "Tom. Supply");
+        drawBar(g2, 300, height, (int)((tomDemand/max)*height),   tomDim,     "Tom. Demand");
+        
+        // Draw Base Line
+        g2.setColor(Color.BLACK);
+        g2.drawLine(40, height + 20, 400, height + 20);
+    }
+
+    private void drawBar(Graphics2D g2, int x, int base, int barHeight, Color c, String label) {
+        g2.setColor(c);
+        g2.fillRect(x, (base + 20) - barHeight, 40, barHeight);
+        g2.setColor(Color.BLACK);
+        g2.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2.drawString(label, x - 10, base + 40);
+    }
+}
+
