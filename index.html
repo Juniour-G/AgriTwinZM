@@ -41,7 +41,7 @@
   .btn-run { background:var(--green-dark); color:var(--yellow); }
   .btn-clear { background:white; border:2px solid var(--green-dark); color:var(--green-dark); }
 
-  #results { display:none; }
+  #results, #chartContainer { display:none; }
   .result-card { background:white; padding:25px; border-radius:12px; box-shadow:0 4px 20px rgba(26,92,26,0.1); border-top:6px solid var(--yellow); }
   .tomato-card { border-top-color:var(--green-light); }
   .total-bar { background:var(--green-dark); color:white; padding:25px 30px; border-radius:12px; margin:25px 0; display:flex; justify-content:space-between; align-items:center; font-size:1.5rem; }
@@ -63,54 +63,54 @@
   <h2 style="text-align:center; color:var(--green-dark); margin:30px 0 25px; font-size:2rem;">Agricultural Data Input</h2>
 
   <div class="cards-grid">
-    <!-- Maize Card -->
     <div class="card">
       <h3>🌽 Maize Data</h3>
-      <div class="input-group"><label>Production (tons)</label><input type="number" id="mProd" value="5200" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Storage (tons)</label><input type="number" id="mStore" value="3500" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Moisture (%)</label><input type="number" id="mMoist" value="12.5" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Price/Ton (ZMW)</label><input type="number" id="mPrice" value="4600" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Loss (%)</label><input type="number" id="mLoss" value="8" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Production (tons)</label><input type="number" id="mProd" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Storage (tons)</label><input type="number" id="mStore" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Moisture (%)</label><input type="number" id="mMoist" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Price/Ton (ZMW)</label><input type="number" id="mPrice" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Loss (%)</label><input type="number" id="mLoss" oninput="liveUpdate()"></div>
     </div>
 
-    <!-- Tomato Card -->
     <div class="card">
       <h3>🍅 Tomato Data</h3>
-      <div class="input-group"><label>Production (tons)</label><input type="number" id="tProd" value="1800" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Storage (tons)</label><input type="number" id="tStore" value="1200" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Spoilage (%)</label><input type="number" id="tSpoil" value="18" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Price/Ton (ZMW)</label><input type="number" id="tPrice" value="8500" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Production (tons)</label><input type="number" id="tProd" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Storage (tons)</label><input type="number" id="tStore" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Spoilage (%)</label><input type="number" id="tSpoil" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Price/Ton (ZMW)</label><input type="number" id="tPrice" oninput="liveUpdate()"></div>
       
-      <!-- New Temperature Fields -->
       <div class="input-group">
         <label>Temperature Type</label>
         <select id="tempType" onchange="liveUpdate()">
-          <option value="Open">Open</option>
+          <option value="Open">Open Field</option>
           <option value="Cold">Cold Storage</option>
         </select>
       </div>
       <div class="input-group">
         <label>Temperature (°C)</label>
-        <input type="number" id="tTemp" value="24" step="0.1" oninput="liveUpdate()">
+        <input type="number" id="tTemp" step="0.1" oninput="liveUpdate()">
       </div>
     </div>
   </div>
 
-  <!-- Market Demand -->
   <div class="card" style="max-width:900px; margin:0 auto 30px;">
     <h3>Market Demand</h3>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-      <div class="input-group"><label>Maize Demand (tons)</label><input type="number" id="mDem" value="4800" oninput="liveUpdate()"></div>
-      <div class="input-group"><label>Tomato Demand (tons)</label><input type="number" id="tDem" value="1400" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Maize Demand (tons)</label><input type="number" id="mDem" oninput="liveUpdate()"></div>
+      <div class="input-group"><label>Tomato Demand (tons)</label><input type="number" id="tDem" oninput="liveUpdate()"></div>
     </div>
   </div>
 
-  <div style="text-align:center; margin:30px 0;">
+  <div style="text-align:center; margin:40px 0;">
     <button class="btn btn-clear" onclick="clearFields()">Clear All</button>
-    <button class="btn btn-run" onclick="runSimulation()" style="margin-left:15px;">▶ Run Full Simulation</button>
+    <button class="btn btn-run" onclick="runSimulation()" style="margin-left:15px;">▶ Run Simulation</button>
   </div>
 
-  <canvas id="supplyChart" height="110"></canvas>
+  <!-- Chart (Hidden until simulation runs) -->
+  <div id="chartContainer">
+    <h3 style="text-align:center; color:var(--green-dark); margin:20px 0;">Supply vs Demand Chart</h3>
+    <canvas id="supplyChart"></canvas>
+  </div>
 
   <!-- Results -->
   <div id="results">
@@ -140,48 +140,43 @@
 </div>
 
 <script>
-// Chart.js
+// Chart
 let supplyChart;
+
 function initChart() {
   supplyChart = new Chart(document.getElementById('supplyChart'), {
     type: 'bar',
     data: {
-      labels: ['Maize Prod', 'Maize Demand', 'Tomato Prod', 'Tomato Demand'],
-      datasets: [{ label: 'Tons', data: [0,0,0,0], backgroundColor: ['#2e7d32', '#f57c00', '#4caf50', '#ff9800'] }]
+      labels: ['Maize Production', 'Maize Demand', 'Tomato Production', 'Tomato Demand'],
+      datasets: [{ 
+        label: 'Tons', 
+        data: [0,0,0,0], 
+        backgroundColor: ['#2e7d32', '#f57c00', '#4caf50', '#ff9800'] 
+      }]
     },
     options: { responsive: true, plugins: { legend: { display: false }}}
   });
 }
 
-// Live Update + Temperature Validation
 function liveUpdate() {
+  // Temperature validation only (no chart update)
   const tempType = document.getElementById('tempType').value;
   const temp = parseFloat(document.getElementById('tTemp').value) || 0;
 
-  // Temperature Validation (same as your Java code)
+  const tempField = document.getElementById('tTemp');
   if (tempType === "Cold" && (temp < 13 || temp > 15)) {
-    document.getElementById('tTemp').style.borderColor = "red";
+    tempField.style.borderColor = "red";
   } else if (tempType === "Open" && (temp < 20 || temp > 29)) {
-    document.getElementById('tTemp').style.borderColor = "red";
+    tempField.style.borderColor = "red";
   } else {
-    document.getElementById('tTemp').style.borderColor = "#4caf50";
+    tempField.style.borderColor = "#d4e0d4";
   }
-
-  // Update Chart
-  supplyChart.data.datasets[0].data = [
-    +document.getElementById('mProd').value || 0,
-    +document.getElementById('mDem').value || 0,
-    +document.getElementById('tProd').value || 0,
-    +document.getElementById('tDem').value || 0
-  ];
-  supplyChart.update();
 }
 
-// Run Simulation
 function runSimulation() {
   liveUpdate();
 
-  // Get all values
+  // Get values
   const mProd = +document.getElementById('mProd').value || 0;
   const mStore = +document.getElementById('mStore').value || 0;
   const mMoist = +document.getElementById('mMoist').value || 0;
@@ -202,10 +197,10 @@ function runSimulation() {
   let mRev = mAvail * mPrice;
   let tRev = tAvail * tPrice;
 
-  const mStat = mAvail > mDem * 1.05 ? "SURPLUS" : mAvail < mDem * 0.95 ? "DEFICIT" : "BALANCED";
-  const tStat = tAvail > tDem * 1.05 ? "SURPLUS" : tAvail < tDem * 0.95 ? "DEFICIT" : "BALANCED";
+  const mStat = mAvail > mDem * 1.05 ? "SURPLUS" : (mAvail < mDem * 0.95 ? "DEFICIT" : "BALANCED");
+  const tStat = tAvail > tDem * 1.05 ? "SURPLUS" : (tAvail < tDem * 0.95 ? "DEFICIT" : "BALANCED");
 
-  // Display Results
+  // Show Results
   document.getElementById('rMaizeVal').textContent = mAvail.toFixed(1);
   document.getElementById('rTomVal').textContent = tAvail.toFixed(1);
   document.getElementById('rMaizeRev').textContent = `ZMW ${mRev.toLocaleString()}`;
@@ -216,18 +211,23 @@ function runSimulation() {
 
   document.getElementById('dateLine').textContent = `Report generated: ${new Date().toLocaleString('en-ZM')}`;
   document.getElementById('results').style.display = 'block';
+  document.getElementById('chartContainer').style.display = 'block';
+
+  // Update Chart
+  supplyChart.data.datasets[0].data = [mProd, mDem, tProd, tDem];
+  supplyChart.update();
 }
 
 function clearFields() {
   document.querySelectorAll('input').forEach(i => i.value = '');
   document.getElementById('results').style.display = 'none';
+  document.getElementById('chartContainer').style.display = 'none';
   document.getElementById('tTemp').style.borderColor = "#d4e0d4";
 }
 
 // Initialize
 window.onload = () => {
   initChart();
-  liveUpdate();
 };
 </script>
 </body>
